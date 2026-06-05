@@ -35,7 +35,7 @@ def create_app():
     register_blueprints(app)
     register_template_helpers(app)
     register_error_handlers(app)
-    initialize_vercel_fallback_db(app)
+    initialize_temp_fallback_db(app)
 
     return app
 
@@ -103,8 +103,8 @@ def register_error_handlers(app):
         )
 
 
-def initialize_vercel_fallback_db(app):
-    if not app.config.get("VERCEL_SQLITE_FALLBACK"):
+def initialize_temp_fallback_db(app):
+    if not app.config.get("TEMP_SQLITE_FALLBACK"):
         return
 
     with app.app_context():
@@ -124,7 +124,7 @@ def initialize_vercel_fallback_db(app):
             )
             db.session.commit()
         app.logger.warning(
-            "Using temporary Vercel SQLite fallback. Set PROD_DATABASE_URL for persistent data."
+            "Using temporary SQLite fallback. Connect MySQL or set PROD_DATABASE_URL for persistent data."
         )
 
 

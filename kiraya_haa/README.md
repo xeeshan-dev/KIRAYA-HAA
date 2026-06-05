@@ -90,6 +90,8 @@ python kiraya_haa/migrations/init_db.py && gunicorn api.index:app --bind 0.0.0.0
 - Add a Railway MySQL service in the same project.
 - Set `FLASK_ENV=production`.
 - Either set `PROD_DATABASE_URL` yourself, or let the app use Railway's `MYSQL_URL`.
+- If Railway exposes only `MYSQLHOST`, `MYSQLPORT`, `MYSQLUSER`, `MYSQLPASSWORD`, and `MYSQLDATABASE`, the app will build the connection URL automatically.
+- If no database variables are available, the app falls back to temporary SQLite so deployment can boot, but data will not persist reliably.
 - Store every secret in Render/Railway environment variables.
 - Uploaded photos are stored under `static/uploads` for v1.0.
 

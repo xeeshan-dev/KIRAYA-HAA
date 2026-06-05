@@ -9,6 +9,24 @@ def normalize_mysql_url(database_url):
     return database_url
 
 
+def railway_mysql_url_from_parts():
+    user = os.environ.get("MYSQLUSER")
+    password = os.environ.get("MYSQLPASSWORD")
+    host = os.environ.get("MYSQLHOST")
+    port = os.environ.get("MYSQLPORT")
+    database = os.environ.get("MYSQLDATABASE")
+    if all([user, password, host, port, database]):
+        return f"mysql+pymysql://{user}:{password}@{host}:{port}/{database}"
+    return None
+
+
+def running_on_serverless_or_railway():
+    return any(
+        os.environ.get(name)
+        for name in ("VERCEL", "RAILWAY_ENVIRONMENT", "RAILWAY_PROJECT_ID")
+    )
+
+
 class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -38,11 +56,14 @@ class DevelopmentConfig(Config):
 class ProductionConfig(Config):
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = normalize_mysql_url(
-        os.environ.get("PROD_DATABASE_URL") or os.environ.get("MYSQL_URL")
+        os.environ.get("PROD_DATABASE_URL")
+        or os.environ.get("MYSQL_URL")
+        or os.environ.get("DATABASE_URL")
+        or railway_mysql_url_from_parts()
     )
-    if not SQLALCHEMY_DATABASE_URI and os.environ.get("VERCEL"):
-        temp_db_path = os.path.join(tempfile.gettempdir(), "kiraya_haa_vercel.db")
+    if not SQLALCHEMY_DATABASE_URI and running_on_serverless_or_railway():
+        temp_db_path = os.path.join(tempfile.gettempdir(), "kiraya_haa_runtime.db")
         SQLALCHEMY_DATABASE_URI = f"sqlite:///{temp_db_path.replace(os.sep, '/')}"
-        VERCEL_SQLITE_FALLBACK = True
+        TEMP_SQLITE_FALLBACK = True
     else:
-        VERCEL_SQLITE_FALLBACK = False
+        TEMP_SQLITE_FALLBACK = False
