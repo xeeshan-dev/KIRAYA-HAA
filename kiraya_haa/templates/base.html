@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}KIRAYA-HAA{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900">
+  <nav class="border-b border-slate-200 bg-white">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+      <a href="{{ url_for('index') }}" class="text-lg font-bold tracking-wide text-emerald-700">KIRAYA-HAA</a>
+      <div class="flex flex-wrap items-center gap-3 text-sm">
+        <a class="nav-link" href="{{ url_for('listings.browse') }}">Browse Listings</a>
+        {% if current_user.is_authenticated %}
+          {% if current_user.role == 'owner' %}
+            <a class="nav-link" href="{{ url_for('listings.dashboard') }}">Dashboard</a>
+            <a class="nav-link" href="{{ url_for('inquiries.inbox') }}">Inbox</a>
+          {% elif current_user.role == 'admin' %}
+            <a class="nav-link" href="{{ url_for('admin.dashboard') }}">Admin Panel</a>
+          {% endif %}
+          <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+        {% else %}
+          <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
+          <a class="rounded-md bg-emerald-700 px-3 py-2 font-medium text-white" href="{{ url_for('auth.register') }}">Register</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="mx-auto max-w-6xl px-4 pt-4">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="space-y-2">
+            {% for category, message in messages %}
+              <div class="flash {{ category }}" data-dismissible>
+                <span>{{ message }}</span>
+                <button type="button" class="font-bold" data-dismiss>&times;</button>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+    </div>
+    {% block content %}{% endblock %}
+  </main>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard - KIRAYA-HAA{% endblock %}
+{% block content %}
+<section class="admin-shell">
+  <aside class="admin-side">
+    <a href="{{ url_for('admin.dashboard') }}">Dashboard</a>
+    <a href="{{ url_for('admin.listings') }}">Listings</a>
+    <a href="{{ url_for('admin.users') }}">Users</a>
+  </aside>
+  <div class="admin-main">
+    <h1 class="text-2xl font-bold">Admin Dashboard</h1>
+    <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div class="admin-stat"><span>Total users</span><strong>{{ stats.users }}</strong></div>
+      <div class="admin-stat"><span>Pending listings</span><strong>{{ stats.pending }}</strong></div>
+      <div class="admin-stat"><span>Approved listings</span><strong>{{ stats.approved }}</strong></div>
+      <div class="admin-stat"><span>Rejected listings</span><strong>{{ stats.rejected }}</strong></div>
+      <div class="admin-stat"><span>Rented listings</span><strong>{{ stats.rented }}</strong></div>
+      <div class="admin-stat"><span>30-day inquiries</span><strong>{{ stats.recent_inquiries }}</strong></div>
+    </div>
+  </div>
+</section>
+{% endblock %}

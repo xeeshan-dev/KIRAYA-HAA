@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+.venv/
+venv/
+env/
+
+# Flask/runtime
+.env
+*.log
+instance/
+*.sqlite
+*.sqlite3
+*.db
+
+# Uploads
+kiraya_haa/static/uploads/*
+!kiraya_haa/static/uploads/.gitignore
+
+# Local/editor
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Build/test cache
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/

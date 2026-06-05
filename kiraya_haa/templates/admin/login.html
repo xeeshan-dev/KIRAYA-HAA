@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Admin Login - KIRAYA-HAA{% endblock %}
+{% block content %}
+<section class="mx-auto max-w-md px-4 py-8">
+  <h1 class="text-2xl font-bold">Admin Login</h1>
+  <form method="post" class="mt-6 space-y-4 rounded-lg border border-slate-800 bg-slate-950 p-5 text-white">
+    {{ form.hidden_tag() }}
+    <div>{% set field = form.email %}{% include "partials/input.html" %}</div>
+    <div>{% set field = form.password %}{% include "partials/input.html" %}</div>
+    {{ form.submit(class="w-full rounded-md bg-emerald-500 px-4 py-2 font-medium text-slate-950") }}
+  </form>
+</section>
+{% endblock %}

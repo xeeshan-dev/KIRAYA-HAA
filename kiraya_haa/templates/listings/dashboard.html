@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Owner Dashboard - KIRAYA-HAA{% endblock %}
+{% block content %}
+<section class="mx-auto max-w-6xl px-4 py-8">
+  <div class="flex items-center justify-between gap-4">
+    <h1 class="text-2xl font-bold">Owner Dashboard</h1>
+    <a href="{{ url_for('listings.add_listing') }}" class="btn-primary">Add listing</a>
+  </div>
+  <div class="mt-6 overflow-x-auto rounded-lg border border-slate-200 bg-white">
+    <table class="w-full min-w-[720px] text-left text-sm">
+      <thead class="bg-slate-100 text-slate-700">
+        <tr><th class="p-3">Listing</th><th class="p-3">Area</th><th class="p-3">Rent</th><th class="p-3">Status</th><th class="p-3">Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for listing in listings %}
+          <tr class="border-t border-slate-200">
+            <td class="p-3 font-medium"><a class="text-emerald-700" href="{{ url_for('listings.detail', listing_id=listing.listing_id) }}">{{ listing.title }}</a></td>
+            <td class="p-3">{{ listing.area }}</td>
+            <td class="p-3">PKR {{ "{:,}".format(listing.rent_pkr) }}</td>
+            <td class="p-3">{{ listing.status.title() }}</td>
+            <td class="p-3">
+              <div class="flex flex-wrap gap-2">
+                <a class="btn-muted" href="{{ url_for('listings.edit_listing', listing_id=listing.listing_id) }}">Edit</a>
+                {% if listing.status in ['approved', 'rented'] %}
+                  <form method="post" action="{{ url_for('listings.toggle_listing', listing_id=listing.listing_id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn-muted" type="submit">{% if listing.status == 'rented' %}Available{% else %}Rented{% endif %}</button></form>
+                {% endif %}
+                <form method="post" action="{{ url_for('listings.delete_listing', listing_id=listing.listing_id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn-danger" type="submit">Delete</button></form>
+              </div>
+            </td>
+          </tr>
+        {% else %}
+          <tr><td class="p-5 text-center text-slate-600" colspan="5">No listings yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

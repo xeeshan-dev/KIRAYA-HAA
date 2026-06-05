@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Admin Listings - KIRAYA-HAA{% endblock %}
+{% block content %}
+<section class="admin-shell">
+  <aside class="admin-side">
+    <a href="{{ url_for('admin.dashboard') }}">Dashboard</a>
+    <a href="{{ url_for('admin.listings') }}">Listings</a>
+    <a href="{{ url_for('admin.users') }}">Users</a>
+  </aside>
+  <div class="admin-main">
+    <h1 class="text-2xl font-bold">Listings</h1>
+    <div class="mt-6 overflow-x-auto rounded-lg border border-slate-700 bg-slate-900">
+      <table class="w-full min-w-[900px] text-left text-sm text-slate-100">
+        <thead class="bg-slate-800 text-slate-300">
+          <tr><th class="p-3">Title</th><th class="p-3">Owner</th><th class="p-3">Area</th><th class="p-3">Status</th><th class="p-3">Actions</th></tr>
+        </thead>
+        <tbody>
+          {% for listing in listings %}
+            <tr class="border-t border-slate-700">
+              <td class="p-3"><a class="text-emerald-300" href="{{ url_for('listings.detail', listing_id=listing.listing_id) }}">{{ listing.title }}</a></td>
+              <td class="p-3">{{ listing.owner.full_name }}</td>
+              <td class="p-3">{{ listing.area }}</td>
+              <td class="p-3">{{ listing.status.title() }}</td>
+              <td class="p-3">
+                <div class="flex flex-wrap gap-2">
+                  <form method="post" action="{{ url_for('admin.approve_listing', listing_id=listing.listing_id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn-admin" type="submit">Approve</button></form>
+                  <form method="post" action="{{ url_for('admin.reject_listing', listing_id=listing.listing_id) }}" class="flex gap-2"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{{ reject_form.reason(class="rounded-md border border-slate-600 bg-slate-950 px-2 py-1 text-sm text-white", placeholder="Reason") }}<button class="btn-admin" type="submit">Reject</button></form>
+                  <form method="post" action="{{ url_for('admin.delete_listing', listing_id=listing.listing_id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn-danger" type="submit">Delete</button></form>
+                </div>
+              </td>
+            </tr>
+          {% else %}
+            <tr><td class="p-5 text-center text-slate-400" colspan="5">No listings.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

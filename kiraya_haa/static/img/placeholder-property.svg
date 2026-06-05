@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500" role="img" aria-label="Property placeholder">
+  <rect width="800" height="500" fill="#e2e8f0"/>
+  <path d="M150 290 400 120l250 170v130H150z" fill="#f8fafc"/>
+  <path d="M215 288 400 165l185 123" fill="none" stroke="#047857" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="325" y="300" width="70" height="120" rx="4" fill="#cbd5e1"/>
+  <rect x="430" y="315" width="90" height="65" rx="4" fill="#bfdbfe"/>
+  <text x="400" y="455" fill="#334155" font-family="Arial, sans-serif" font-size="30" text-anchor="middle">KIRAYA-HAA</text>
+</svg>

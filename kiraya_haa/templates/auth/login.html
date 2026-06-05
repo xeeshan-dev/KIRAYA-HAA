@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Login - KIRAYA-HAA{% endblock %}
+{% block content %}
+<section class="mx-auto max-w-md px-4 py-8">
+  <h1 class="text-2xl font-bold">Log in</h1>
+  <form method="post" class="mt-6 space-y-4 rounded-lg border border-slate-200 bg-white p-5">
+    {{ form.hidden_tag() }}
+    <div>{% set field = form.email %}{% include "partials/input.html" %}</div>
+    <div>{% set field = form.password %}{% include "partials/input.html" %}</div>
+    {{ form.submit(class="btn-primary w-full") }}
+    <a href="{{ url_for('auth.forgot_password') }}" class="block text-center text-sm text-emerald-700">Forgot password?</a>
+  </form>
+</section>
+{% endblock %}
