@@ -1,5 +1,12 @@
 import os
+import tempfile
 from datetime import timedelta
+
+
+def normalize_mysql_url(database_url):
+    if database_url and database_url.startswith("mysql://"):
+        return database_url.replace("mysql://", "mysql+pymysql://", 1)
+    return database_url
 
 
 class Config:
@@ -30,4 +37,12 @@ class DevelopmentConfig(Config):
 
 class ProductionConfig(Config):
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get("PROD_DATABASE_URL")
+    SQLALCHEMY_DATABASE_URI = normalize_mysql_url(
+        os.environ.get("PROD_DATABASE_URL") or os.environ.get("MYSQL_URL")
+    )
+    if not SQLALCHEMY_DATABASE_URI and os.environ.get("VERCEL"):
+        temp_db_path = os.path.join(tempfile.gettempdir(), "kiraya_haa_vercel.db")
+        SQLALCHEMY_DATABASE_URI = f"sqlite:///{temp_db_path.replace(os.sep, '/')}"
+        VERCEL_SQLITE_FALLBACK = True
+    else:
+        VERCEL_SQLITE_FALLBACK = False

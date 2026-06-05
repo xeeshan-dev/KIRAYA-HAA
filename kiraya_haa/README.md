@@ -80,11 +80,41 @@ Open `http://127.0.0.1:5000`.
 
 ## Deployment Notes
 
+- Railway is the recommended host for this Flask app.
+- The repository includes `railway.json`, which starts the app with:
+
+```bash
+python kiraya_haa/migrations/init_db.py && gunicorn api.index:app --bind 0.0.0.0:$PORT
+```
+
+- Add a Railway MySQL service in the same project.
 - Set `FLASK_ENV=production`.
-- Set `PROD_DATABASE_URL` to a MySQL connection string.
+- Either set `PROD_DATABASE_URL` yourself, or let the app use Railway's `MYSQL_URL`.
 - Store every secret in Render/Railway environment variables.
-- Run `python migrations/init_db.py` once during deployment setup.
 - Uploaded photos are stored under `static/uploads` for v1.0.
+
+Suggested Railway variables:
+
+```env
+SECRET_KEY=your-secret-key
+FLASK_ENV=production
+ADMIN_EMAIL=admin@example.com
+ADMIN_PASSWORD_HASH=your-bcrypt-hash
+MAIL_SERVER=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USE_TLS=true
+MAIL_USERNAME=your-email@gmail.com
+MAIL_PASSWORD=your-gmail-app-password
+MAIL_DEFAULT_SENDER=your-email@gmail.com
+UPLOAD_FOLDER=static/uploads
+MAX_CONTENT_LENGTH=26214400
+```
+
+If you prefer to set `PROD_DATABASE_URL` explicitly:
+
+```env
+PROD_DATABASE_URL=mysql+pymysql://user:password@host:port/database
+```
 
 ## Out of Scope
 

@@ -35,6 +35,7 @@ def create_app():
     register_blueprints(app)
     register_template_helpers(app)
     register_error_handlers(app)
+    initialize_vercel_fallback_db(app)
 
     return app
 
@@ -99,6 +100,31 @@ def register_error_handlers(app):
                 message="Something went wrong. Please try again later.",
             ),
             500,
+        )
+
+
+def initialize_vercel_fallback_db(app):
+    if not app.config.get("VERCEL_SQLITE_FALLBACK"):
+        return
+
+    with app.app_context():
+        from models import User
+
+        db.create_all()
+        admin_email = app.config.get("ADMIN_EMAIL")
+        admin_hash = app.config.get("ADMIN_PASSWORD_HASH")
+        if admin_email and admin_hash and not User.query.filter_by(email=admin_email).first():
+            db.session.add(
+                User(
+                    full_name="KIRAYA-HAA Admin",
+                    email=admin_email,
+                    password_hash=admin_hash,
+                    role="admin",
+                )
+            )
+            db.session.commit()
+        app.logger.warning(
+            "Using temporary Vercel SQLite fallback. Set PROD_DATABASE_URL for persistent data."
         )
 
 
